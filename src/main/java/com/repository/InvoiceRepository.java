@@ -32,12 +32,6 @@ public class InvoiceRepository {
         return invoices;
     }
 
-    public void sort() {
-        invoices.sort(Comparator.comparing(Invoice::getCustomer, Comparator.comparingInt(Customer::getAge).reversed())
-                .thenComparingInt(i-> i.getOrderList().size())
-                .thenComparing(Invoice::getPriceOfOrder, BigDecimal::compareTo));
-    }
-
     public void clear() {
         invoices.clear();
     }

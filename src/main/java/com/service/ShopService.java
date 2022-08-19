@@ -22,10 +22,15 @@ public class ShopService {
     private static final Float DIAGONAL_PRICE_BOUND = 100F;
     private static final Random RANDOM = new Random();
     private final Map<String,String> PRODUCT_PROPERTIES = new HashMap<>();
+    private static List<Appliance> appliancesFromResources;
     private static List<String> models;
     private static List<String> series;
     private static List<String> countries;
     private static List<String> screenTypes;
+
+    public ShopService() {
+        ShopService.appliancesFromResources = getApplianceFromCSV();
+    }
 
     public boolean saveInvoice(Invoice invoice) {
         INVOICE_REPOSITORY.save(invoice);
@@ -37,11 +42,6 @@ public class ShopService {
     }
 
     public List<Invoice> getAllInvoices() {
-        return INVOICE_REPOSITORY.getInvoices();
-    }
-
-    public List<Invoice> getSortedInvoices() {
-        INVOICE_REPOSITORY.sort();
         return INVOICE_REPOSITORY.getInvoices();
     }
 
@@ -69,9 +69,8 @@ public class ShopService {
     public Invoice generateRandomInvoice(Customer customer) {
         int numberOfProducts = RANDOM.nextInt(1,5);
         List<Appliance> invoiceProducts = new ArrayList<>();
-        List<Appliance> allStoredProducts = getApplianceFromCSV();
         for(int i = 0; i < numberOfProducts; i++) {
-            invoiceProducts.add(allStoredProducts.get(RANDOM.nextInt(0,allStoredProducts.size()-1)));
+            invoiceProducts.add(appliancesFromResources.get(RANDOM.nextInt(0,appliancesFromResources.size()-1)));
         }
         return new Invoice(invoiceProducts, customer);
     }
